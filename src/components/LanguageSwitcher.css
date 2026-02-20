@@ -1,0 +1,272 @@
+/* LanguageSwitcher.css */
+
+.language-switcher {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.3rem;
+  background: rgba(11, 16, 38, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* Стандартное позиционирование в шапке */
+.header-actions .language-switcher {
+  margin-right: 1rem;
+}
+
+/* Фиксированное позиционирование (для страниц где нет шапки) */
+.language-switcher.fixed {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10000;
+}
+
+/* Абсолютное позиционирование */
+.language-switcher.absolute {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10000;
+}
+
+/* Стили кнопок */
+.language-switcher button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.language-switcher button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.language-switcher button:hover::before {
+  width: 200px;
+  height: 200px;
+}
+
+.language-switcher button:hover {
+  color: #FFD700;
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.language-switcher button.active {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #0B1026;
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+.language-switcher button.active::before {
+  display: none;
+}
+
+.language-switcher button.active:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+}
+
+.language-switcher button:active {
+  transform: scale(0.95);
+}
+
+/* Флаги */
+.language-switcher button span {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Анимация переключения */
+@keyframes switchGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+.language-switcher button.active {
+  animation: switchGlow 0.5s ease-out;
+}
+
+/* Индикатор загрузки при смене языка */
+.language-switcher button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.language-switcher button.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #FFD700;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Премиум эффект при переключении */
+.language-switcher button.active {
+  position: relative;
+}
+
+.language-switcher button.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #0B1026, transparent);
+  border-radius: 1px;
+  animation: activePulse 2s ease-in-out infinite;
+}
+
+@keyframes activePulse {
+  0%, 100% { opacity: 0.3; width: 20px; }
+  50% { opacity: 1; width: 30px; }
+}
+
+/* Дополнительные премиум эффекты */
+.language-switcher button {
+  backdrop-filter: blur(5px);
+}
+
+.language-switcher button.active {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 5px 15px rgba(255, 215, 0, 0.3),
+    inset 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Украшаем флаги */
+.language-switcher button span {
+  display: inline-block;
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.language-switcher button:hover span {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.language-switcher button.active span {
+  transform: scale(1.1);
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .language-switcher button:hover {
+    color: rgba(255, 255, 255, 0.6);
+    border-color: transparent;
+  }
+
+  .language-switcher button.active:hover {
+    transform: none;
+  }
+
+  .language-switcher button::before {
+    display: none;
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .language-switcher {
+    gap: 0.3rem;
+    padding: 0.2rem;
+  }
+
+  .language-switcher button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .language-switcher button span {
+    font-size: 1.1rem;
+  }
+
+  /* Адаптивность для фиксированного/абсолютного позиционирования */
+  .language-switcher.fixed,
+  .language-switcher.absolute {
+    top: 1rem;
+    right: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .language-switcher button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .language-switcher button span {
+    font-size: 1rem;
+  }
+
+  .language-switcher.fixed,
+  .language-switcher.absolute {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .language-switcher button {
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .language-switcher button span {
+    margin-right: 0.2rem;
+  }
+}
+
+/* Улучшенная доступность */
+@media (prefers-reduced-motion: reduce) {
+  .language-switcher,
+  .language-switcher button,
+  .language-switcher button::before,
+  .language-switcher button.active {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Темный режим */
+@media (prefers-color-scheme: dark) {
+  .language-switcher {
+    background: rgba(11, 16, 38, 0.8);
+  }
+}
