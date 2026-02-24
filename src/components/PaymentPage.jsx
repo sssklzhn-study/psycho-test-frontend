@@ -16,29 +16,54 @@ function PaymentPage() {
   const [step, setStep] = useState('form'); // form, qr, success
   const navigate = useNavigate();
 
+  // const createOrder = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const amount = testCount * 1000;
+      
+  //     const response = await API.post('/payment/create-order', {
+  //       amount,
+  //       count: testCount
+  //     });
+      
+  //     if (response.data.success) {
+  //       setQrCode(response.data.qrCode);
+  //       setOrderId(response.data.orderId);
+  //       setStep('qr');
+  //       checkPaymentStatus(response.data.orderId);
+  //     }
+  //   } catch (error) {
+  //     console.error('Ошибка создания заказа:', error);
+  //     alert(t('payment.error') || 'Не удалось создать заказ');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const createOrder = async () => {
-    try {
-      setLoading(true);
-      const amount = testCount * 1000;
-      
-      const response = await API.post('/payment/create-order', {
-        amount,
-        count: testCount
-      });
-      
-      if (response.data.success) {
-        setQrCode(response.data.qrCode);
-        setOrderId(response.data.orderId);
-        setStep('qr');
-        checkPaymentStatus(response.data.orderId);
-      }
-    } catch (error) {
-      console.error('Ошибка создания заказа:', error);
-      alert(t('payment.error') || 'Не удалось создать заказ');
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    const amount = testCount * 1000;
+    const userId = localStorage.getItem('userId'); // 👈 ПОЛУЧАЕМ userId
+    
+    const response = await API.post('/payment/create-order', {
+      amount,
+      count: testCount,
+      userId: userId // 👈 ПЕРЕДАЕМ НА БЭКЕНД
+    });
+    
+    if (response.data.success) {
+      setQrCode(response.data.qrCode);
+      setOrderId(response.data.orderId);
+      setStep('qr');
+      checkPaymentStatus(response.data.orderId);
     }
-  };
+  } catch (error) {
+    console.error('Ошибка создания заказа:', error);
+    alert(t('payment.error') || 'Не удалось создать заказ');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const checkPaymentStatus = async (id) => {
     setChecking(true);
