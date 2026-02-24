@@ -261,6 +261,7 @@ i18n
 
           // ========== HOME PAGE (НОВЫЕ ПЕРЕВОДЫ) ==========
 "home.my_accesses": "Мои доступы",
+"common.copied": "Скопировано!",
 "home.purchase_new": "Приобрести новый тест",
 "home.purchase_button": "🚀 Купить тест (1000 ₸)",
 "home.no_accesses": "У вас пока нет активных доступов",
@@ -574,6 +575,7 @@ i18n
           "scale.ast.full": "Зейінділік, сезімталдық (Ast)",
           // ========== HOME PAGE (НОВЫЕ ПЕРЕВОДЫ) ==========
 "home.my_accesses": "Менің қолжетімділіктерім",
+"common.copied": "Көшірілді!",
 "home.purchase_new": "Жаңа тест сатып алу",
 "home.purchase_button": "🚀 Тест сатып алу (1000 ₸)",
 "home.no_accesses": "Сізде әрекетті қолжетімділіктер жоқ",

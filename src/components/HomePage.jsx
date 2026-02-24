@@ -45,7 +45,7 @@ function HomePage() {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    alert('Скопировано!');
+    alert(t('common.copied') || 'Скопировано!');
   };
 
   const startTest = (login, password) => {
@@ -78,13 +78,13 @@ function HomePage() {
                 onClick={() => navigate('/profile')}
                 className="profile-btn"
               >
-                👤 Личный кабинет
+                {t('home.view_profile')}
               </button>
               <button 
                 onClick={handleLogout}
                 className="logout-btn"
               >
-                Выйти
+                {t('home.logout')}
               </button>
             </div>
           ) : (
@@ -93,13 +93,13 @@ function HomePage() {
                 onClick={() => navigate('/register')}
                 className="register-nav-btn"
               >
-                📝 Регистрация
+                {t('home.guest_content.cta.button')}
               </button>
               <button 
                 onClick={() => navigate('/login')}
                 className="login-btn"
               >
-                🔐 Войти
+                {t('nav.login')}
               </button>
             </>
           )}
@@ -109,10 +109,10 @@ function HomePage() {
       {/* Герой-секция */}
       <div className="hero-section">
         <h1 className="hero-title">
-          Профессиональное психологическое тестирование
+          {t('home.title')}
         </h1>
         <p className="hero-subtitle">
-           · 6 шкал · Точная методика · 160 вопросов
+          {t('home.subtitle')}
         </p>
       </div>
 
@@ -122,22 +122,22 @@ function HomePage() {
           
           {/* БЛОК ПОКУПКИ */}
           <div className="purchase-block">
-            <h2>💳 Приобрести новый тест</h2>
+            <h2>{t('home.purchase_new')}</h2>
             <button 
               onClick={() => navigate('/payment')}
               className="purchase-btn"
             >
-              🚀 Купить тест (1000 ₸)
+              {t('home.purchase_button')}
             </button>
           </div>
 
           {/* БЛОК ДОСТУПОВ */}
           <div className="accesses-block">
-            <h2>🔑 Мои доступы</h2>
+            <h2>{t('home.my_accesses')}</h2>
             {loading ? (
-              <p>Загрузка...</p>
+              <p>{t('loading')}</p>
             ) : accesses.length === 0 ? (
-              <p className="no-data">У вас пока нет активных доступов</p>
+              <p className="no-data">{t('home.no_accesses')}</p>
             ) : (
               <div className="accesses-list">
                 {accesses.map((access) => (
@@ -149,22 +149,22 @@ function HomePage() {
                           onClick={() => startTest(access.login, access.password)}
                           className="start-test-btn"
                         >
-                          ▶️ Пройти тест
+                          {t('home.start_test')}
                         </button>
                       ) : (
-                        <span className="completed-badge">✅ Пройден</span>
+                        <span className="completed-badge">{t('home.completed')}</span>
                       )}
                       <button 
                         onClick={() => copyToClipboard(access.login)}
                         className="copy-btn"
-                        title="Копировать логин"
+                        title={t('home.copy_login')}
                       >
                         📋
                       </button>
                       <button 
                         onClick={() => copyToClipboard(access.password)}
                         className="copy-btn"
-                        title="Копировать пароль"
+                        title={t('home.copy_password')}
                       >
                         🔑
                       </button>
@@ -177,11 +177,11 @@ function HomePage() {
 
           {/* БЛОК ИСТОРИИ */}
           <div className="recent-results">
-            <h2>📊 Последние результаты</h2>
+            <h2>{t('home.recent_results')}</h2>
             {loading ? (
-              <p>Загрузка...</p>
+              <p>{t('loading')}</p>
             ) : history.length === 0 ? (
-              <p className="no-data">У вас пока нет пройденных тестов</p>
+              <p className="no-data">{t('home.no_results')}</p>
             ) : (
               <div className="results-preview">
                 {history.slice(0, 3).map((item, idx) => (
@@ -199,7 +199,7 @@ function HomePage() {
                     onClick={() => navigate('/profile')}
                     className="view-all-btn"
                   >
-                    📋 Все результаты
+                    {t('home.all_results')}
                   </button>
                 )}
               </div>
@@ -211,61 +211,61 @@ function HomePage() {
         <div className="guest-content">
           {/* Преимущества */}
           <div className="features-section">
-            <h2 className="section-title">Почему выбирают нас?</h2>
+            <h2 className="section-title">{t('home.guest_content.features_title')}</h2>
             <div className="features-grid">
               <div className="feature-card">
                 <div className="feature-icon">🔬</div>
-                <h3>Научная методика</h3>
-                <p>Тест основан на профессиональных психологических методиках</p>
+                <h3>{t('home.guest_content.features.scientific.title')}</h3>
+                <p>{t('home.guest_content.features.scientific.desc')}</p>
               </div>
               <div className="feature-card">
                 <div className="feature-icon">📊</div>
-                <h3>6 шкал оценки</h3>
-                <p>Достоверность, психопатия, истероидность и другие</p>
+                <h3>{t('home.guest_content.features.scales.title')}</h3>
+                <p>{t('home.guest_content.features.scales.desc')}</p>
               </div>
               <div className="feature-card">
                 <div className="feature-icon">🔒</div>
-                <h3>Анонимно и безопасно</h3>
-                <p>Все результаты хранятся в вашем личном кабинете</p>
+                <h3>{t('home.guest_content.features.anonymous.title')}</h3>
+                <p>{t('home.guest_content.features.anonymous.desc')}</p>
               </div>
               <div className="feature-card">
                 <div className="feature-icon">📱</div>
-                <h3>Доступно везде</h3>
-                <p>Проходите тест с любого устройства</p>
+                <h3>{t('home.guest_content.features.anywhere.title')}</h3>
+                <p>{t('home.guest_content.features.anywhere.desc')}</p>
               </div>
             </div>
           </div>
 
           {/* Как это работает */}
           <div className="how-it-works">
-            <h2 className="section-title">Как это работает?</h2>
+            <h2 className="section-title">{t('home.guest_content.how_it_works')}</h2>
             <div className="steps">
               <div className="step">
                 <div className="step-number">1</div>
                 <div className="step-content">
-                  <h3>Зарегистрируйтесь</h3>
-                  <p>Создайте аккаунт за 1 минуту</p>
+                  <h3>{t('home.guest_content.steps.register.title')}</h3>
+                  <p>{t('home.guest_content.steps.register.desc')}</p>
                 </div>
               </div>
               <div className="step">
                 <div className="step-number">2</div>
                 <div className="step-content">
-                  <h3>Купите тест</h3>
-                  <p>Через Kaspi QR (1000 ₸ за тест)</p>
+                  <h3>{t('home.guest_content.steps.buy.title')}</h3>
+                  <p>{t('home.guest_content.steps.buy.desc')}</p>
                 </div>
               </div>
               <div className="step">
                 <div className="step-number">3</div>
                 <div className="step-content">
-                  <h3>Пройдите тест</h3>
-                  <p>160 вопросов за 20-30 минут</p>
+                  <h3>{t('home.guest_content.steps.take.title')}</h3>
+                  <p>{t('home.guest_content.steps.take.desc')}</p>
                 </div>
               </div>
               <div className="step">
                 <div className="step-number">4</div>
                 <div className="step-content">
-                  <h3>Изучите результаты</h3>
-                  <p>Подробный отчет по всем шкалам</p>
+                  <h3>{t('home.guest_content.steps.results.title')}</h3>
+                  <p>{t('home.guest_content.steps.results.desc')}</p>
                 </div>
               </div>
             </div>
@@ -273,12 +273,12 @@ function HomePage() {
 
           {/* Призыв к действию */}
           <div className="cta-section">
-            <h2 className="cta-title">Готовы узнать себя лучше?</h2>
+            <h2 className="cta-title">{t('home.guest_content.cta.title')}</h2>
             <button 
               onClick={() => navigate('/register')}
               className="cta-large-btn"
             >
-              📝 Зарегистрироваться
+              {t('home.guest_content.cta.button')}
             </button>
           </div>
         </div>
@@ -286,7 +286,7 @@ function HomePage() {
 
       {/* Футер */}
       <div className="home-footer">
-        <p>© 2026 PsychoTest. Все права защищены</p>
+        <p>{t('home.rights')}</p>
       </div>
     </div>
   );
