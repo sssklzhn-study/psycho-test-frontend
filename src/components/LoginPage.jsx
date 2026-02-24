@@ -174,6 +174,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import API from '../api/axios';
 import LanguageSwitcher from './LanguageSwitcher';
+import { auth, signInWithEmailAndPassword } from '../firebase'; // 👈 ДОБАВЬ ЭТОТ ИМПОРТ
 import './LoginPage.css';
 
 function LoginPage() {
@@ -211,37 +212,74 @@ function LoginPage() {
         return;
       }
 
-      // Вход для всех типов пользователей через единый эндпоинт
-      console.log('🟡 Вход пользователя:', login);
+      // Проверяем, является ли логин email-ом
+      const isEmail = login.includes('@');
       
-      const response = await API.post('/auth/login', {
-        login: login,
-        password: password
-      });
-
-      if (response.data.success) {
-        // Сохраняем данные пользователя
-        localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('userLogin', response.data.login);
-        localStorage.setItem('isCompleted', response.data.isCompleted);
-        localStorage.setItem('isAdmin', 'false');
-
-        console.log('✅ Пользователь авторизован');
+      if (isEmail) {
+        // Вход через Firebase для зарегистрированных пользователей
+        console.log('🟡 Вход через Firebase для email:', login);
         
-        // Перенаправление в зависимости от статуса
-        if (response.data.isCompleted) {
-          // Если уже прошел тест - на страницу результатов
-          window.location.href = `/results/${response.data.userId}`;
-        } else {
-          // Если не проходил - на тест
-          window.location.href = '/test';
+        // Аутентификация в Firebase
+        const userCredential = await signInWithEmailAndPassword(auth, login, password);
+        const idToken = await userCredential.user.getIdToken();
+        
+        console.log('🟢 Firebase токен получен, отправляем на бэкенд');
+        
+        const response = await API.post('/auth/firebase-login', {
+          idToken,
+          login: login,
+          password: password
+        });
+        
+        if (response.data.success) {
+          localStorage.setItem('userId', response.data.userId);
+          localStorage.setItem('userLogin', response.data.login);
+          localStorage.setItem('isCompleted', response.data.isCompleted);
+          localStorage.setItem('isAdmin', 'false');
+
+          console.log('✅ Пользователь авторизован');
+          
+          if (response.data.isCompleted) {
+            window.location.href = `/results/${response.data.userId}`;
+          } else {
+            window.location.href = '/';
+          }
+        }
+      } else {
+        // Вход через обычный логин для сгенерированных пользователей
+        console.log('🟡 Вход по логину:', login);
+        
+        const response = await API.post('/auth/login', {
+          login: login,
+          password: password
+        });
+
+        if (response.data.success) {
+          localStorage.setItem('userId', response.data.userId);
+          localStorage.setItem('userLogin', response.data.login);
+          localStorage.setItem('isCompleted', response.data.isCompleted);
+          localStorage.setItem('isAdmin', 'false');
+
+          console.log('✅ Пользователь авторизован');
+          
+          if (response.data.isCompleted) {
+            window.location.href = `/results/${response.data.userId}`;
+          } else {
+            window.location.href = '/';
+          }
         }
       }
     } catch (err) {
       console.error('🔴 Ошибка входа:', err);
       
-      // Обработка ошибок
-      if (err.response?.status === 401) {
+      // Обработка ошибок Firebase
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+        setError('Неверный логин или пароль');
+      } else if (err.code === 'auth/user-not-found') {
+        setError('Пользователь не найден');
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Слишком много попыток. Попробуйте позже');
+      } else if (err.response?.status === 401) {
         setError('Неверный логин или пароль');
       } else if (err.code === 'ERR_NETWORK') {
         setError('Ошибка соединения с сервером');
@@ -270,7 +308,7 @@ function LoginPage() {
               id="login"
               value={login}
               onChange={(e) => setLogin(e.target.value)}
-              placeholder="Введите логин"
+              placeholder="Введите логин или email"
               required
               className="form-input"
             />
@@ -323,7 +361,7 @@ function LoginPage() {
 
         {/* Информация для пользователей */}
         <div className="login-info">
-          <p>👤 Для прохождения теста: введите логин и пароль</p>
+          <p>👤 Для прохождения теста: введите логин или email и пароль</p>
           <p>🛒 Нет логина? Купите доступ</p>
           <p>👑 Админ: login: admin, пароль: ваш пароль</p>
         </div>
