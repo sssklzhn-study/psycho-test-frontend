@@ -316,7 +316,7 @@ function LoginPage() {
               className="payment-link-btn"
               onClick={() => navigate('/payment')}
             >
-              Купить доступ
+              Оплатить доступ
             </button>
           </p>
         </div>
