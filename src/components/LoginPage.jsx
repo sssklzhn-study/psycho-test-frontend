@@ -1,9 +1,9 @@
 // import React, { useState } from 'react';
 // import { useNavigate, Link } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
-// import { auth, signInWithEmailAndPassword } from '../firebase';
 // import API from '../api/axios';
 // import LanguageSwitcher from './LanguageSwitcher';
+// import { auth, signInWithEmailAndPassword } from '../firebase'; // 👈 ДОБАВЬ ЭТОТ ИМПОРТ
 // import './LoginPage.css';
 
 // function LoginPage() {
@@ -20,21 +20,13 @@
 //     setLoading(true);
 
 //     try {
+//       // Проверка на админа
 //       if (login === 'admin') {
-//         console.log('🟡 Попытка входа администратора через Firebase');
+//         console.log('🟡 Попытка входа администратора');
         
-//         const userCredential = await signInWithEmailAndPassword(
-//           auth, 
-//           'admin@psychotest.com', 
-//           password
-//         );
-        
-//         const idToken = await userCredential.user.getIdToken();
-        
-//         console.log('🟢 Firebase токен получен, отправляем на бэкенд');
-        
-//         const response = await API.post('/auth/firebase-admin', {
-//           idToken
+//         const response = await API.post('/auth/admin-login', {
+//           login: login,
+//           password: password
 //         });
 
 //         if (response.data.success) {
@@ -43,50 +35,85 @@
 //           localStorage.setItem('userLogin', 'admin');
 //           localStorage.setItem('isCompleted', 'false');
           
-//           console.log('✅ Админ авторизован, перенаправление...');
-          
-//           // 👇 АДМИН ИДЕТ В АДМИНКУ!
+//           console.log('✅ Админ авторизован');
 //           window.location.href = '/admin';
 //         }
 //         return;
 //       }
 
-//       console.log('🟡 Вход через Firebase');
+//       // Проверяем, является ли логин email-ом
+//       const isEmail = login.includes('@');
       
-//       const userCredential = await signInWithEmailAndPassword(auth, login, password);
-      
-//       const idToken = await userCredential.user.getIdToken();
-      
-//       console.log('🟢 Firebase токен получен, отправляем на бэкенд');
-      
-//       const response = await API.post('/auth/firebase-login', {
-//         idToken,
-//         login,
-//         password
-//       });
-
-//       if (response.data.success) {
-//         localStorage.setItem('userId', response.data.userId);
-//         localStorage.setItem('userLogin', response.data.login);
-//         localStorage.setItem('isCompleted', response.data.isCompleted);
-//         localStorage.setItem('isAdmin', 'false');
-
-//         console.log('✅ Пользователь авторизован');
+//       if (isEmail) {
+//         // Вход через Firebase для зарегистрированных пользователей
+//         console.log('🟡 Вход через Firebase для email:', login);
         
-//         // 👇 ОБЫЧНЫЙ ПОЛЬЗОВАТЕЛЬ ИДЕТ НА ГЛАВНУЮ
-//         window.location.href = '/';
+//         // Аутентификация в Firebase
+//         const userCredential = await signInWithEmailAndPassword(auth, login, password);
+//         const idToken = await userCredential.user.getIdToken();
+        
+//         console.log('🟢 Firebase токен получен, отправляем на бэкенд');
+        
+//         const response = await API.post('/auth/firebase-login', {
+//           idToken,
+//           login: login,
+//           password: password
+//         });
+        
+//         if (response.data.success) {
+//           localStorage.setItem('userId', response.data.userId);
+//           localStorage.setItem('userLogin', response.data.login);
+//           localStorage.setItem('isCompleted', response.data.isCompleted);
+//           localStorage.setItem('isAdmin', 'false');
+
+//           console.log('✅ Пользователь авторизован');
+          
+//           if (response.data.isCompleted) {
+//             window.location.href = `/results/${response.data.userId}`;
+//           } else {
+//             window.location.href = '/';
+//           }
+//         }
+//       } else {
+//         // Вход через обычный логин для сгенерированных пользователей
+//         console.log('🟡 Вход по логину:', login);
+        
+//         const response = await API.post('/auth/login', {
+//           login: login,
+//           password: password
+//         });
+
+//         if (response.data.success) {
+//           localStorage.setItem('userId', response.data.userId);
+//           localStorage.setItem('userLogin', response.data.login);
+//           localStorage.setItem('isCompleted', response.data.isCompleted);
+//           localStorage.setItem('isAdmin', 'false');
+
+//           console.log('✅ Пользователь авторизован');
+          
+//           if (response.data.isCompleted) {
+//             window.location.href = `/results/${response.data.userId}`;
+//           } else {
+//             window.location.href = '/';
+//           }
+//         }
 //       }
 //     } catch (err) {
 //       console.error('🔴 Ошибка входа:', err);
       
+//       // Обработка ошибок Firebase
 //       if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-//         setError(t('login.error.invalid'));
+//         setError('Неверный логин или пароль');
 //       } else if (err.code === 'auth/user-not-found') {
-//         setError(t('login.error.invalid'));
+//         setError('Пользователь не найден');
 //       } else if (err.code === 'auth/too-many-requests') {
 //         setError('Слишком много попыток. Попробуйте позже');
+//       } else if (err.response?.status === 401) {
+//         setError('Неверный логин или пароль');
+//       } else if (err.code === 'ERR_NETWORK') {
+//         setError('Ошибка соединения с сервером');
 //       } else {
-//         setError(err.response?.data?.detail || t('login.error.invalid'));
+//         setError('Ошибка входа. Попробуйте позже');
 //       }
 //     } finally {
 //       setLoading(false);
@@ -110,7 +137,7 @@
 //               id="login"
 //               value={login}
 //               onChange={(e) => setLogin(e.target.value)}
-//               placeholder={t('login.placeholder.username')}
+//               placeholder="Введите логин или email"
 //               required
 //               className="form-input"
 //             />
@@ -123,7 +150,7 @@
 //               id="password"
 //               value={password}
 //               onChange={(e) => setPassword(e.target.value)}
-//               placeholder={t('login.placeholder.password')}
+//               placeholder="Введите пароль"
 //               required
 //               className="form-input"
 //             />
@@ -134,34 +161,38 @@
 //             className="login-button"
 //             disabled={loading}
 //           >
-//             {loading ? t('loading') : t('login.button')}
+//             {loading ? 'Вход...' : t('login.button')}
 //           </button>
 //         </form>
 
+//         {/* Блок для самостоятельной регистрации */}
 //         <div className="register-link-container">
 //           <p className="register-link-text">
-//             {t('register.no_account') || 'Нет аккаунта?'} 
+//             Нет аккаунта? 
 //             <Link to="/register" className="register-link-btn">
-//               {t('register.button') || 'Зарегистрироваться'}
+//               Зарегистрироваться
 //             </Link>
 //           </p>
 //         </div>
 
+//         {/* Блок для покупки доступа */}
 //         <div className="payment-link-container">
 //           <p className="payment-link-text">
-//             {t('payment.no_login') || 'Нет логина?'} 
+//             Нет логина для теста? 
 //             <button 
 //               className="payment-link-btn"
 //               onClick={() => navigate('/payment')}
 //             >
-//               {t('payment.buy_access') || 'Купить доступ'}
+//               Оплатить доступ
 //             </button>
 //           </p>
 //         </div>
 
+//         {/* Информация для пользователей */}
 //         <div className="login-info">
-//           <p>{t('login.user.hint')}</p>
-//           <p>{t('login.admin.hint')}</p>
+//           <p>👤 Для прохождения теста: введите логин или email и пароль</p>
+//           <p>🛒 Нет логина? Купите доступ</p>
+//           <p>👑 Админ: login: admin, пароль: ваш пароль</p>
 //         </div>
 //       </div>
 //     </div>
@@ -174,7 +205,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import API from '../api/axios';
 import LanguageSwitcher from './LanguageSwitcher';
-import { auth, signInWithEmailAndPassword } from '../firebase'; // 👈 ДОБАВЬ ЭТОТ ИМПОРТ
+import { auth, signInWithEmailAndPassword } from '../firebase';
 import './LoginPage.css';
 
 function LoginPage() {
@@ -236,18 +267,16 @@ function LoginPage() {
           localStorage.setItem('userLogin', response.data.login);
           localStorage.setItem('isCompleted', response.data.isCompleted);
           localStorage.setItem('isAdmin', 'false');
+          localStorage.setItem('userType', 'email');
 
-          console.log('✅ Пользователь авторизован');
+          console.log('✅ Email пользователь авторизован');
           
-          if (response.data.isCompleted) {
-            window.location.href = `/results/${response.data.userId}`;
-          } else {
-            window.location.href = '/';
-          }
+          // 👇 EMAIL ПОЛЬЗОВАТЕЛИ ИДУТ НА ГЛАВНУЮ
+          window.location.href = '/';
         }
       } else {
         // Вход через обычный логин для сгенерированных пользователей
-        console.log('🟡 Вход по логину:', login);
+        console.log('🟡 Вход по логину (сгенерированный пользователь):', login);
         
         const response = await API.post('/auth/login', {
           login: login,
@@ -259,14 +288,12 @@ function LoginPage() {
           localStorage.setItem('userLogin', response.data.login);
           localStorage.setItem('isCompleted', response.data.isCompleted);
           localStorage.setItem('isAdmin', 'false');
+          localStorage.setItem('userType', 'generated');
 
-          console.log('✅ Пользователь авторизован');
+          console.log('✅ Сгенерированный пользователь авторизован');
           
-          if (response.data.isCompleted) {
-            window.location.href = `/results/${response.data.userId}`;
-          } else {
-            window.location.href = '/';
-          }
+          // 👇 СГЕНЕРИРОВАННЫЕ ПОЛЬЗОВАТЕЛИ ИДУТ СРАЗУ НА ТЕСТ
+          window.location.href = '/test';
         }
       }
     } catch (err) {
