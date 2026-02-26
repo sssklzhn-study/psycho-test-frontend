@@ -1,7 +1,7 @@
 // import axios from 'axios';
 
 // const API = axios.create({
-//   baseURL: 'http://127.0.0.1:8000',
+//   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
 //   headers: {
 //     'Content-Type': 'application/json',
 //   },
@@ -16,28 +16,42 @@
 //   return config;
 // });
 
-// // Логирование запросов для отладки
-// API.interceptors.request.use((config) => {
-//   console.log(`📤 ${config.method.toUpperCase()} ${config.baseURL}${config.url}`, config.data || '');
-//   return config;
-// });
+// // Логирование запросов для отладки (только в development)
+// if (process.env.NODE_ENV === 'development') {
+//   API.interceptors.request.use((config) => {
+//     console.log(`📤 ${config.method.toUpperCase()} ${config.baseURL}${config.url}`, config.data || '');
+//     return config;
+//   });
 
-// API.interceptors.response.use(
-//   (response) => {
-//     console.log(`📥 ${response.status} ${response.config.url}`, response.data);
-//     return response;
-//   },
-//   (error) => {
-//     console.error('❌ Ошибка API:', error.response?.data || error.message);
-//     return Promise.reject(error);
-//   }
-// );
+//   API.interceptors.response.use(
+//     (response) => {
+//       console.log(`📥 ${response.status} ${response.config.url}`, response.data);
+//       return response;
+//     },
+//     (error) => {
+//       console.error('❌ Ошибка API:', error.response?.data || error.message);
+//       return Promise.reject(error);
+//     }
+//   );
+// }
 
 // export default API;
+
 import axios from 'axios';
 
+// Автоматически определяем окружение
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+
+// Правильный baseURL для разных окружений
+const baseURL = isProduction 
+  ? 'https://psycho-test-api.onrender.com'  // 👈 ТВОЙ БЭКЕНД НА RENDER
+  : (process.env.REACT_APP_API_URL || 'http://localhost:8000');
+
+console.log('🌍 Окружение:', isProduction ? 'PRODUCTION' : 'DEVELOPMENT');
+console.log('🔗 API URL:', baseURL);
+
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -49,26 +63,28 @@ API.interceptors.request.use((config) => {
   if (userId) {
     config.headers['X-User-Id'] = userId;
   }
+  
+  // Логируем полный URL запроса
+  console.log(`📤 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
   return config;
 });
 
-// Логирование запросов для отладки (только в development)
-if (process.env.NODE_ENV === 'development') {
-  API.interceptors.request.use((config) => {
-    console.log(`📤 ${config.method.toUpperCase()} ${config.baseURL}${config.url}`, config.data || '');
-    return config;
-  });
-
-  API.interceptors.response.use(
-    (response) => {
-      console.log(`📥 ${response.status} ${response.config.url}`, response.data);
-      return response;
-    },
-    (error) => {
-      console.error('❌ Ошибка API:', error.response?.data || error.message);
-      return Promise.reject(error);
-    }
-  );
-}
+// Логирование ответов
+API.interceptors.response.use(
+  (response) => {
+    console.log(`📥 ${response.status} ${response.config.url}`);
+    return response;
+  },
+  (error) => {
+    console.error('❌ Ошибка API:', {
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    return Promise.reject(error);
+  }
+);
 
 export default API;
