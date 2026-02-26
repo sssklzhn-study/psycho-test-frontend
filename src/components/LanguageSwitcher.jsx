@@ -47,7 +47,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './LanguageSwitcher.css';
 
-function LanguageSwitcher({ position = 'header' }) { // position может быть 'header', 'fixed', 'absolute'
+function LanguageSwitcher() {
   const { i18n } = useTranslation();
   const [changing, setChanging] = useState(false);
 
@@ -64,7 +64,7 @@ function LanguageSwitcher({ position = 'header' }) { // position может бы
   };
 
   return (
-    <div className={`language-switcher ${position}`}>
+    <div className="language-switcher">
       <button 
         onClick={() => changeLanguage('ru')}
         className={`${i18n.language === 'ru' ? 'active' : ''} ${changing ? 'loading' : ''}`}

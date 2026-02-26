@@ -12,9 +12,6 @@
   z-index: 1000;
 }
 
-/* Убираем все позиционирования из самого компонента */
-/* .language-switcher.fixed, .language-switcher.absolute - удаляем */
-
 /* Стили кнопок */
 .language-switcher button {
   display: flex;
