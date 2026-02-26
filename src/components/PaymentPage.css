@@ -102,13 +102,7 @@
   animation: goldShimmer 6s ease-in-out infinite reverse;
 }
 
-/* Language switcher */
-.language-switcher {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 10;
-}
+
 
 /* Payment Card */
 .payment-card {
@@ -580,10 +574,7 @@
     background: #0B1026;
   }
 
-  .language-switcher {
-    top: 1rem;
-    right: 1rem;
-  }
+
 
   .payment-card {
     max-width: 100%;

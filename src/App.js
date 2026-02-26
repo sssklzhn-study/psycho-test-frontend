@@ -19,17 +19,14 @@
 //   useEffect(() => {
 //     console.log('🎯 App MOUNTED');
     
-//     // Симуляция загрузки
 //     setTimeout(() => setLoading(false), 1000);
 
-//     // Слушаем изменения сети
 //     const handleOnline = () => setNetworkStatus(true);
 //     const handleOffline = () => setNetworkStatus(false);
     
 //     window.addEventListener('online', handleOnline);
 //     window.addEventListener('offline', handleOffline);
 
-//     // Слушаем auth изменения
 //     const handleAuthChange = () => {
 //       console.log('📢 Событие изменения auth');
 //       setForceUpdate(prev => prev + 1);
@@ -49,31 +46,21 @@
 //   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 //   const userId = localStorage.getItem('userId');
 //   const isCompleted = localStorage.getItem('isCompleted') === 'true';
+//   const userType = localStorage.getItem('userType');
+//   const hasTempLogin = localStorage.getItem('tempLogin');
 
 //   console.log('🔄 App render:', { 
 //     isAdmin, 
 //     userId, 
 //     isCompleted, 
+//     userType,
+//     hasTempLogin,
 //     forceUpdate,
-//     networkStatus,
-//     timestamp: new Date().toLocaleTimeString() 
+//     networkStatus
 //   });
-
-//   // if (loading) {
-//   //   return (
-//   //     <div className="loading-screen">
-//   //       <div className="loading-spinner"></div>
-//   //       <div className="loading-text">PsychoTest</div>
-//   //       <div className="loading-progress">
-//   //         <div className="loading-progress-bar"></div>
-//   //       </div>
-//   //     </div>
-//   //   );
-//   // }
 
 //   return (
 //     <div className="App">
-//       {/* Фоновые элементы */}
 //       <div className="background-orb background-orb-1"></div>
 //       <div className="background-orb background-orb-2"></div>
 //       <div className="background-orb background-orb-3"></div>
@@ -81,35 +68,55 @@
 //       <div className="gold-line-vertical"></div>
 //       <div className="gold-line-horizontal"></div>
 
-//       {/* Индикатор сети */}
 //       <div className={`network-status ${networkStatus ? 'online' : 'offline'}`}>
 //         {networkStatus ? 'Online' : 'Offline'}
 //       </div>
 
-//       {/* Версия приложения */}
 //       <div className="app-version">v1.0.0</div>
 
-//       {/* Контент */}
 //       <div className="content-wrapper">
 //         <Routes>
 //           <Route path="/" element={<HomePage />} />
 //           <Route path="/login" element={<LoginPage />} />
 //           <Route path="/payment" element={<PaymentPage />} />
+//           <Route path="/register" element={<RegisterPage />} />
+          
+//           {/* Профиль - только для email-пользователей */}
 //           <Route 
 //             path="/profile" 
 //             element={
-//               userId && !isAdmin ? <UserProfile /> : <Navigate to="/" replace />
-//             } 
-//           />
-//           <Route 
-//             path="/test" 
-//             element={
-//               userId && !isAdmin && !isCompleted ? 
-//                 <TestPage /> : 
+//               userId && !isAdmin && userType === 'email' ? 
+//                 <UserProfile /> : 
 //                 <Navigate to="/" replace />
 //             } 
 //           />
-//           <Route path="/register" element={<RegisterPage />} />
+          
+//           {/* Тест - для сгенерированных, купивших, и не прошедших тест */}
+//           <Route 
+//             path="/test" 
+//             element={
+//               (() => {
+//                 // Сгенерированные пользователи
+//                 if (userId && !isAdmin && !isCompleted && userType === 'generated') {
+//                   return <TestPage />;
+//                 }
+                
+//                 // Только что купившие тест
+//                 if (hasTempLogin && !isCompleted) {
+//                   return <TestPage />;
+//                 }
+                
+//                 // Email пользователи, которые еще не проходили тест
+//                 if (userId && !isAdmin && !isCompleted && userType === 'email') {
+//                   return <TestPage />;
+//                 }
+                
+//                 return <Navigate to="/" replace />;
+//               })()
+//             } 
+//           />
+          
+//           {/* Результаты - только для прошедших тест */}
 //           <Route 
 //             path="/result" 
 //             element={
@@ -131,6 +138,8 @@
 //               })()
 //             } 
 //           />
+          
+//           {/* Админ панель */}
 //           <Route 
 //             path="/admin/*" 
 //             element={
@@ -154,6 +163,7 @@ import ResultPage from './components/ResultPage';
 import RegisterPage from './components/RegisterPage';
 import PaymentPage from './components/PaymentPage';
 import UserProfile from './components/UserProfile';
+import LanguageSwitcher from './components/LanguageSwitcher';
 import './App.css';
 import './i18n';
 
@@ -213,6 +223,16 @@ function App() {
       <div className="grid-overlay"></div>
       <div className="gold-line-vertical"></div>
       <div className="gold-line-horizontal"></div>
+
+      {/* LanguageSwitcher в правом верхнем углу, над всем контентом */}
+      <div style={{
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        zIndex: 10000
+      }}>
+        <LanguageSwitcher />
+      </div>
 
       <div className={`network-status ${networkStatus ? 'online' : 'offline'}`}>
         {networkStatus ? 'Online' : 'Offline'}

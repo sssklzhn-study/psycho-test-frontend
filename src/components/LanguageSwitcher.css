@@ -9,28 +9,11 @@
   border-radius: 16px;
   border: 1px solid rgba(255, 215, 0, 0.15);
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 }
 
-/* Стандартное позиционирование в шапке */
-.header-actions .language-switcher {
-  margin-right: 1rem;
-}
-
-/* Фиксированное позиционирование (для страниц где нет шапки) */
-.language-switcher.fixed {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 10000;
-}
-
-/* Абсолютное позиционирование */
-.language-switcher.absolute {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 10000;
-}
+/* Убираем все позиционирования из самого компонента */
+/* .language-switcher.fixed, .language-switcher.absolute - удаляем */
 
 /* Стили кнопок */
 .language-switcher button {
@@ -217,13 +200,6 @@
   .language-switcher button span {
     font-size: 1.1rem;
   }
-
-  /* Адаптивность для фиксированного/абсолютного позиционирования */
-  .language-switcher.fixed,
-  .language-switcher.absolute {
-    top: 1rem;
-    right: 1rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -234,12 +210,6 @@
 
   .language-switcher button span {
     font-size: 1rem;
-  }
-
-  .language-switcher.fixed,
-  .language-switcher.absolute {
-    top: 0.75rem;
-    right: 0.75rem;
   }
 }
 

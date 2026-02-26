@@ -93,13 +93,7 @@
   animation: goldShimmer 6s ease-in-out infinite reverse;
 }
 
-/* Language switcher */
-.language-switcher {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 10;
-}
+
 
 /* Result Card */
 .result-card {
@@ -494,10 +488,7 @@
     align-items: flex-start;
   }
 
-  .language-switcher {
-    top: 1rem;
-    right: 1rem;
-  }
+
 
   .result-card {
     max-width: 100%;

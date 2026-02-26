@@ -90,13 +90,6 @@
   animation: goldShimmer 6s ease-in-out infinite reverse;
 }
 
-/* Language switcher */
-.language-switcher {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 100;
-}
 
 /* Header */
 .admin-header {

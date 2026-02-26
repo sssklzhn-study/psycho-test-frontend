@@ -90,13 +90,6 @@
   animation: goldShimmer 6s ease-in-out infinite reverse;
 }
 
-/* Language switcher */
-.language-switcher {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 100;
-}
 
 /* Test Header */
 .test-header {
@@ -539,10 +532,7 @@
     background: #0B1026;
   }
 
-  .language-switcher {
-    top: 1rem;
-    right: 1rem;
-  }
+
 
   .test-header {
     padding: 1rem;
