@@ -320,7 +320,7 @@ function LoginPage() {
 
   return (
     <div className="login-container">
-      <LanguageSwitcher />
+     {/* <LanguageSwitcher />  */}
       <div className="login-card">
         <h1 className="login-title">{t('login.title')}</h1>
         <p className="login-subtitle">{t('login.subtitle')}</p>

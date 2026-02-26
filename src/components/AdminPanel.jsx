@@ -248,7 +248,7 @@ function AdminPanel() {
 
   return (
     <div className="admin-container">
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       <div className="admin-header">
         <h1 className="admin-title">{t('admin.title')}</h1>
         <button onClick={logout} className="logout-btn">

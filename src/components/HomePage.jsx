@@ -364,7 +364,7 @@ function HomePage() {
         </div>
         
         <div className="header-actions">
-          <LanguageSwitcher />
+          {/* <LanguageSwitcher /> */}
           
           {isAuthenticated ? (
             <div className="user-menu">

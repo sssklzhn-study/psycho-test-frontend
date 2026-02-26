@@ -304,7 +304,7 @@ function PaymentPage() {
 
   return (
     <div className="payment-container">
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       
       {step === 'form' && (
         <div className="payment-card">

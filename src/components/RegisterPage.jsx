@@ -81,7 +81,7 @@ function RegisterPage() {
 
   return (
     <div className="register-container">
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       <div className="register-card">
         <h1 className="register-title">{t('register.title') || 'Регистрация'}</h1>
         <p className="register-subtitle">

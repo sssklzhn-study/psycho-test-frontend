@@ -152,7 +152,7 @@ function TestPage() {
 
   return (
     <div className="test-container">
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       
       <div className="test-header">
         <div className="progress-info">

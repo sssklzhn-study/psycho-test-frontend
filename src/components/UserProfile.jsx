@@ -116,7 +116,7 @@ function UserProfile() {
 
   return (
     <div className="profile-container">
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       
       <div className="profile-header">
         <div className="header-left">

@@ -129,7 +129,7 @@ function ResultPage() {
 
   return (
     <div className="result-container">
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       <div className="result-card">
         <h1 className="result-title">{t('result.title')}</h1>
         <p className="result-subtitle">
