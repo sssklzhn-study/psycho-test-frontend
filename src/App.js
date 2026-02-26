@@ -224,10 +224,10 @@ function App() {
       <div className="gold-line-vertical"></div>
       <div className="gold-line-horizontal"></div>
 
-      {/* LanguageSwitcher в правом верхнем углу, над всем контентом */}
+      {/* LanguageSwitcher в правом НИЖНЕМ углу */}
       <div style={{
         position: 'fixed',
-        top: '20px',
+        bottom: '20px',   // 👈 ИЗМЕНИЛИ С top НА bottom
         right: '20px',
         zIndex: 10000
       }}>
